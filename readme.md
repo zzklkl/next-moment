@@ -12,7 +12,6 @@
 
 ## 项目说明
 
-- 仓库：[moments](http://git.imweb.io/imweb-teacher/moments)
 - 目标：完成6个任务，实现一个基本微信朋友圈的界面
 
 
