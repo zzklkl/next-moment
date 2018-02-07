@@ -150,7 +150,29 @@ function multiplePicTpl(pics) {
   htmlText.push('</ul>');
   return htmlText.join('');
 }
-
+/**
+ * 分享消息模版
+ * @param {object} share 分享的内容
+ * @return {String} 返回html字符串
+ */
+function shareTpl(share) {
+  var htmlText = [];
+  htmlText.push('<a class="item-share" href="#">')
+  htmlText.push('<img class="share-img" src="' + share.pic + 
+  '" width="40" height="40" alt=""><p class="share-tt">' + share.text + '</p>');
+  htmlText.push('</a>')
+  return htmlText.join('');
+}
+/**
+ * 单图片消息模版
+ * @param {object} pics 图片
+ * @return {String} 返回html字符串
+ */
+function singlePicTpl(pics) {
+  var htmlText = [];
+  htmlText.push('<img class="item-only-img" src="' + pics[0] + '">');
+  return htmlText.join('');
+}
 /**
  * 循环：消息体 
  * @param {Object} messageData 对象
@@ -180,10 +202,16 @@ function messageTpl(messageData) {
       break;
     case 1:
       // TODO: 实现分享消息
+      contentHtml = shareTpl(content.share);
+      break;
     case 2:
       // TODO: 实现单张图片消息
+      contentHtml = singlePicTpl(content.pics);
+      break;
     case 3:
       // TODO: 实现无图片消息
+      contentHtml = '';
+      break;
   }
   htmlText.push(contentHtml);
   // 消息时间和回复按钮
@@ -204,7 +232,12 @@ function messageTpl(messageData) {
  */
 function render() {
   // TODO: 目前只渲染了一个消息（多图片信息）,需要展示data数组中的所有消息数据。
-  var messageHtml = messageTpl(data[0]);
+  var messageHtml = '';
+  var i = 0;
+  var len = data.length;
+  for (; i < len; i++) {
+    messageHtml += messageTpl(data[i]);
+  }
   $momentsList.html(messageHtml);
 }
 
