@@ -1,5 +1,7 @@
 // TODO: 用户名称需修改为自己的名称
 var userName = 'Lu仔酱';
+var uName = document.querySelector('.user-name');
+uName.innerText = userName;
 // 朋友圈页面的数据
 var data = [{
   user: {
@@ -218,6 +220,7 @@ function messageTpl(messageData) {
   htmlText.push('<div class="item-ft">');
   htmlText.push('<span class="item-time">' + content.timeString + '</span>');
   htmlText.push('<div class="item-reply-btn">');
+  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i>赞</div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
   htmlText.push('<span class="item-reply"></span>');
   htmlText.push('</div></div>');
   // 消息回复模块（点赞和评论）

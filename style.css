@@ -115,6 +115,32 @@
     z-index: 2;
     background: #fff;
 }
+.moments-item .item-ft .reply-btn-box {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px 0;
+    width: 160px;
+    height: 36px;
+    color: #fff;
+    background: #666;
+    border-radius: 3px;
+    opacity: 0;
+}
+.moments-item .item-ft .reply-btn {
+    flex: 1;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
+    border-left: 1px solid #333;
+}
+.moments-item .item-ft .reply-btn:first-child {
+    border: 0;
+}
+
 .moments-item .item-ft .item-reply {
     background: currentColor;
     width: 16px;
@@ -190,6 +216,7 @@
 .moments-item .icon-like,
 .moments-item .icon-comment {
     display: inline-block;
+    margin-right: 4px;
     width: 16px;
     height: 16px;
     background-size: cover;
