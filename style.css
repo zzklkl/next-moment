@@ -117,7 +117,7 @@
 }
 .moments-item .item-ft .reply-btn-box {
     position: absolute;
-    right: 20px;
+    right: 36px;
     top: 0;
     display: flex;
     justify-content: space-around;
@@ -126,9 +126,11 @@
     width: 160px;
     height: 36px;
     color: #fff;
-    background: #666;
+    background-color: #666;
     border-radius: 3px;
-    opacity: 0;
+    transform-origin: right center;
+    transform: scaleX(0);
+    transition: transform 0.5s;
 }
 .moments-item .item-ft .reply-btn {
     flex: 1;
@@ -227,4 +229,63 @@
 }
 .moments-item .reply-like+.reply-comment {
     border-top: 1px solid #ccc;
+}
+/* 图片层 */
+.enlarge-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+/* 回复按钮框弹出 */
+.reply-box-out {
+    transform: scaleX(1) !important;
+}
+
+/* 评论框 */
+.moments-input{
+    position:fixed;
+    z-index: 10;
+    bottom:0;
+    left:0;
+    display:none;
+    align-items: center;
+    border-top:1px solid #ddd;
+    width: 100%;
+    height:60px;
+    background: #f9f9f9;
+}
+.moments-input .input-text{
+    margin-left:4%;
+    padding-left:10px;
+    width:74%;
+    height:40px;
+    font-size:16px;
+    border:1px solid #ddd;
+    border-radius: 5px;
+}
+.moments-input button{
+    margin-left:3%;
+    width:16%;
+    height:40px;
+    border:none;
+    outline: none;
+    border-radius: 5px;
+    background:#25cb2c;
+    font-size:16px;
+    font-weight:600;
+    color:#fff;
+}
+.moments-input .forbid{
+    background:transparent;
+    color:#ccc;
+    font-weight:400;
+    border:1px solid #ddd;
 }

@@ -1,5 +1,5 @@
 // TODO: 用户名称需修改为自己的名称
-var userName = 'Lu仔酱';
+var userName = 'kl';
 var uName = document.querySelector('.user-name');
 uName.innerText = userName;
 // 朋友圈页面的数据
@@ -85,6 +85,7 @@ var data = [{
 // 相关 DOM
 var $page = $('.page-moments');
 var $momentsList = $('.moments-list');
+var $enlargeImg = $('.enlarge-image');
 
 /**
  * 点赞内容 HTML 模板
@@ -183,7 +184,7 @@ function messageTpl(messageData) {
   var user = messageData.user;
   var content = messageData.content;
   var htmlText = [];
-  htmlText.push('<div class="moments-item" data-index="0">');
+  htmlText.push('<div class="moments-item" data-index="' +  data.indexOf(messageData) + '">');
   // 消息用户头像
   htmlText.push('<a class="item-left" href="#">');
   htmlText.push('<img src="' + user.avatar + '" width="42" height="42" alt=""/>');
@@ -220,7 +221,13 @@ function messageTpl(messageData) {
   htmlText.push('<div class="item-ft">');
   htmlText.push('<span class="item-time">' + content.timeString + '</span>');
   htmlText.push('<div class="item-reply-btn">');
-  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i>赞</div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
+  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i><span>')
+  if(messageData.reply.hasLiked){
+    htmlText.push('取消');
+  }else{
+    htmlText.push('赞');
+  }
+  htmlText.push('</span></div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
   htmlText.push('<span class="item-reply"></span>');
   htmlText.push('</div></div>');
   // 消息回复模块（点赞和评论）
@@ -242,6 +249,8 @@ function render() {
     messageHtml += messageTpl(data[i]);
   }
   $momentsList.html(messageHtml);
+  //隐藏遮盖图层
+  $enlargeImg.hide();
 }
 
 
@@ -250,6 +259,109 @@ function render() {
  */
 function bindEvent() {
   // TODO: 完成页面交互功能事件绑定
+  // DOM 绑定
+  var $replyBtnBox = $('.reply-btn-box');
+  var $itemReplyBtn = $('.item-reply-btn');
+  var $likeBtn = $('.like--btn');
+  var $commentBtn = $('.comment--btn');
+  var $inputText = $('.input-text');
+  var $momentsInput = $('.moments-input');
+  var $inputBtn = $('.moments-input button');
+  var $image = $enlargeImg.find('img');
+
+  // 回复按钮框绑定点击事件
+  $itemReplyBtn.on('click', showReplyBtnBox);
+  // 绑定隐藏回复按钮框事件
+  $page.on('click', hideReplyBtnBox);
+  //绑定点赞事件
+  $likeBtn.on('click', onLike);
+  //绑定评论按钮点击事件
+  $commentBtn.on('click', onComment);
+  //绑定input的keyup事件
+  $inputText.on('keyup', inputChange);
+  //发送按钮的点击事件
+  $inputBtn.on('click', sendComment);
+  // 绑定图片点击事件
+  $page.on('click', '.item-only-img,.pic-item', enlargeImg)
+  // 绑定大图点击事件
+  $enlargeImg.on('click', hideImg);
+
+  //事件函数
+  var index = null;
+  /**
+   * 隐藏点赞评论框: hideReplyBtnBox
+   */
+  function hideReplyBtnBox() {
+    $replyBtnBox.removeClass('reply-box-out');
+  };
+  /**
+   * 显示点赞评论框: showReplyBtnBox
+   */
+  function showReplyBtnBox() {
+    var $thisBox = $(this).children('.reply-btn-box');
+    $replyBtnBox.not($thisBox).removeClass('reply-box-out');
+    $thisBox.toggleClass('reply-box-out');
+    return false;
+  };
+  /**
+   * 点赞: onLike
+   */
+  function onLike() {
+    var index=$(this).parents('.moments-item').data('index');
+    var $datathis=data[index].reply.likes;
+    if($(this).text() === '取消'){
+      $datathis.splice($datathis.indexOf(userName),1);
+      $(this).text('点赞');
+    }else{
+      $datathis.push(userName);
+      $(this).text('取消');
+    }
+    $('.reply-zone').eq(index).replaceWith(replyTpl(data[index].reply));
+  };
+  /**
+   * 弹出评论框: onComment
+   */
+  function onComment(){
+    index=$(this).parents('.moments-item').data('index');
+    $momentsInput.css('display','flex');
+  };
+  /**
+   * 检测input keyup事件
+   */
+  function inputChange() {
+    if($(this).val().trim() === ''){
+      $inputBtn.addClass('forbid');
+    }else{
+      $inputBtn.removeClass('forbid');
+    }
+  };
+  /**
+   * 发送评论: sendComment
+   */
+  function sendComment() {
+    var $datathis = data[index].reply.comments;
+    if(!$(this).hasClass('forbid')){
+      $datathis.push({author:userName,text:$inputText.val()});
+      $inputText.val('');
+      $(this).parent().css('display','none');
+      $('.reply-zone').eq(index).replaceWith(replyTpl(data[index].reply));
+      $(this).addClass('forbid');
+    }
+  };
+  /**
+   * 图片放大函数: enlargeimg
+   */
+  function enlargeImg() {
+    var imgsrc = $(this).attr('src');
+    $image.attr('src', imgsrc);
+    $enlargeImg.show();
+  }
+  /**
+   * 图片隐藏函数: hideImg
+   */
+  function hideImg() {
+    $(this).hide();
+  }
 }
 
 /**
