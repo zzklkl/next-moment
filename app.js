@@ -177,6 +177,20 @@ function singlePicTpl(pics) {
   return htmlText.join('');
 }
 /**
+ * 
+ * @param {Boolean} hasLiked 是否点赞
+ * @return {String} 返回html字符串
+ */
+function hasLikedTpl(hasLiked) {
+  var htmlText = [];
+  if(hasLiked){
+    htmlText.push('取消');
+  }else{
+    htmlText.push('赞');
+  }
+  return htmlText.join('');
+}
+/**
  * 循环：消息体 
  * @param {Object} messageData 对象
  */ 
@@ -221,12 +235,8 @@ function messageTpl(messageData) {
   htmlText.push('<div class="item-ft">');
   htmlText.push('<span class="item-time">' + content.timeString + '</span>');
   htmlText.push('<div class="item-reply-btn">');
-  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i><span>')
-  if(messageData.reply.hasLiked){
-    htmlText.push('取消');
-  }else{
-    htmlText.push('赞');
-  }
+  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i><span class="js-hasliked">')
+  htmlText.push(hasLikedTpl(messageData.reply.hasLiked))
   htmlText.push('</span></div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
   htmlText.push('<span class="item-reply"></span>');
   htmlText.push('</div></div>');
@@ -235,7 +245,6 @@ function messageTpl(messageData) {
   htmlText.push('</div></div>');
   return htmlText.join('');
 }
-
 
 /**
  * 页面渲染函数：render
@@ -310,15 +319,19 @@ function bindEvent() {
    * 点赞: onLike
    */
   function onLike() {
-    var index=$(this).parents('.moments-item').data('index');
-    var $datathis=data[index].reply.likes;
-    if($(this).text() === '取消'){
-      $datathis.splice($datathis.indexOf(userName),1);
-      $(this).text('点赞');
+    var index = $(this).parents('.moments-item').data('index');
+    var $datathis = data[index].reply;
+    var $replyLikes = $datathis.likes;
+    var $hasLiked = $datathis.hasLiked;
+    if($hasLiked === true){
+      $replyLikes.splice($replyLikes.indexOf(userName),1);
     }else{
-      $datathis.push(userName);
-      $(this).text('取消');
+      $replyLikes.push(userName);
     }
+    data[index].reply.hasLiked = !data[index].reply.hasLiked;
+    // 为什么下面的代码改变不了布尔值
+    // $hasLiked = !$hasLiked;
+    $('.js-hasliked').eq(index).replaceWith(hasLikedTpl(data[index].reply.hasLiked));
     $('.reply-zone').eq(index).replaceWith(replyTpl(data[index].reply));
   };
   /**
