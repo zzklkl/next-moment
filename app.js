@@ -272,7 +272,7 @@ function bindEvent() {
   // 回复按钮框绑定点击事件
   $itemReplyBtn.on('click', showReplyBtnBox);
   // 绑定隐藏回复按钮框事件
-  $page.on('click', hideReplyBtnBox);
+  $momentsList.on('click', hideReplyBtnBox);
   //绑定点赞事件
   $likeBtn.on('click', onLike);
   //绑定评论按钮点击事件
@@ -291,8 +291,11 @@ function bindEvent() {
   /**
    * 隐藏点赞评论框: hideReplyBtnBox
    */
-  function hideReplyBtnBox() {
+  function hideReplyBtnBox(e) {
     $replyBtnBox.removeClass('reply-box-out');
+    if(e.currentTarget.className !== 'moments-input'&&'input-text') {
+    $momentsInput.css('display','none');
+    }
   };
   /**
    * 显示点赞评论框: showReplyBtnBox
@@ -323,6 +326,8 @@ function bindEvent() {
    */
   function onComment(){
     index=$(this).parents('.moments-item').data('index');
+    $inputText.val('');
+    $inputBtn.addClass('forbid');
     $momentsInput.css('display','flex');
   };
   /**
@@ -356,7 +361,7 @@ function bindEvent() {
     $image.attr('src', imgsrc);
     $enlargeImg.show();
     $(document.body).css({
-    "overflow":"hidden",
+    'overflow': 'hidden'
     });
   }
   /**
@@ -365,7 +370,7 @@ function bindEvent() {
   function hideImg() {
     $(this).hide();
     $(document.body).css({
-      "overflow":"auto",
+      'overflow': 'auto'
       });
   }
 }
