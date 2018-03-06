@@ -355,12 +355,18 @@ function bindEvent() {
     var imgsrc = $(this).attr('src');
     $image.attr('src', imgsrc);
     $enlargeImg.show();
+    $(document.body).css({
+    "overflow":"hidden",
+    });
   }
   /**
    * 图片隐藏函数: hideImg
    */
   function hideImg() {
     $(this).hide();
+    $(document.body).css({
+      "overflow":"auto",
+      });
   }
 }
 
