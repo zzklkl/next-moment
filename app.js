@@ -178,16 +178,18 @@ function singlePicTpl(pics) {
 }
 /**
  * 
- * @param {Boolean} hasLiked 是否点赞
+ * @param {Boolean} hasliked 是否点赞
  * @return {String} 返回html字符串
  */
-function hasLikedTpl(hasLiked) {
+function hasLikedTpl(hasliked) {
   var htmlText = [];
-  if(hasLiked){
+  htmlText.push('<span class="js-hasliked">');
+  if(hasliked){
     htmlText.push('取消');
   }else{
     htmlText.push('赞');
   }
+  htmlText.push('</span>');
   return htmlText.join('');
 }
 /**
@@ -235,9 +237,9 @@ function messageTpl(messageData) {
   htmlText.push('<div class="item-ft">');
   htmlText.push('<span class="item-time">' + content.timeString + '</span>');
   htmlText.push('<div class="item-reply-btn">');
-  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i><span class="js-hasliked">')
-  htmlText.push(hasLikedTpl(messageData.reply.hasLiked))
-  htmlText.push('</span></div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
+  htmlText.push('<div class="reply-btn-box"><div class="reply-btn like--btn"><i class="icon-like"></i>');
+  htmlText.push(hasLikedTpl(messageData.reply.hasLiked));
+  htmlText.push('</div><div class="reply-btn comment--btn"><i class="icon-comment"></i>评论</div></div>');
   htmlText.push('<span class="item-reply"></span>');
   htmlText.push('</div></div>');
   // 消息回复模块（点赞和评论）
@@ -282,6 +284,8 @@ function bindEvent() {
   $itemReplyBtn.on('click', showReplyBtnBox);
   // 绑定隐藏回复按钮框事件
   $momentsList.on('click', hideReplyBtnBox);
+  // 隐藏输入框
+  $momentsList.on('click', hideComment);
   //绑定点赞事件
   $likeBtn.on('click', onLike);
   //绑定评论按钮点击事件
@@ -300,11 +304,8 @@ function bindEvent() {
   /**
    * 隐藏点赞评论框: hideReplyBtnBox
    */
-  function hideReplyBtnBox(e) {
+  function hideReplyBtnBox() {
     $replyBtnBox.removeClass('reply-box-out');
-    if(e.currentTarget.className !== 'moments-input'&&'input-text') {
-    $momentsInput.css('display','none');
-    }
   };
   /**
    * 显示点赞评论框: showReplyBtnBox
@@ -323,17 +324,28 @@ function bindEvent() {
     var $datathis = data[index].reply;
     var $replyLikes = $datathis.likes;
     var $hasLiked = $datathis.hasLiked;
-    if($hasLiked === true){
+    if(data[index].reply.hasLiked  === true){
       $replyLikes.splice($replyLikes.indexOf(userName),1);
+      data[index].reply.hasLiked = !data[index].reply.hasLiked;
     }else{
       $replyLikes.push(userName);
+      data[index].reply.hasLiked = !data[index].reply.hasLiked;
     }
-    data[index].reply.hasLiked = !data[index].reply.hasLiked;
+    // data[index].reply.hasLiked = !data[index].reply.hasLiked;
     // 为什么下面的代码改变不了布尔值
     // $hasLiked = !$hasLiked;
-    $('.js-hasliked').eq(index).replaceWith(hasLikedTpl(data[index].reply.hasLiked));
     $('.reply-zone').eq(index).replaceWith(replyTpl(data[index].reply));
+    $('.js-hasliked').eq(index).replaceWith(hasLikedTpl(data[index].reply.hasLiked));
   };
+  /**
+   * 隐藏输入框
+   */
+  function hideComment(e) {
+    var eClassName = e.currentTarget.className
+    if(eClassName !== 'moments-input' && eClassName !== 'input-text') {
+      $momentsInput.css('display','none');
+    }
+  }
   /**
    * 弹出评论框: onComment
    */
