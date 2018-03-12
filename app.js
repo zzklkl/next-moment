@@ -326,14 +326,10 @@ function bindEvent() {
     var $hasLiked = $datathis.hasLiked;
     if(data[index].reply.hasLiked  === true){
       $replyLikes.splice($replyLikes.indexOf(userName),1);
-      data[index].reply.hasLiked = !data[index].reply.hasLiked;
     }else{
       $replyLikes.push(userName);
-      data[index].reply.hasLiked = !data[index].reply.hasLiked;
     }
-    // data[index].reply.hasLiked = !data[index].reply.hasLiked;
-    // 为什么下面的代码改变不了布尔值
-    // $hasLiked = !$hasLiked;
+    data[index].reply.hasLiked = !$hasLiked;
     $('.reply-zone').eq(index).replaceWith(replyTpl(data[index].reply));
     $('.js-hasliked').eq(index).replaceWith(hasLikedTpl(data[index].reply.hasLiked));
   };
